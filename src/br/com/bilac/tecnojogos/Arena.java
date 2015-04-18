@@ -2,15 +2,11 @@ package br.com.bilac.tecnojogos;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.HashSet;
 
 
 public class Arena extends JComponent implements MouseListener, ActionListener {
-
     private int w, h;
     private HashSet<Tanque> tanques;
     private Timer timer;
@@ -19,7 +15,53 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
         this.w = w;
         this.h = h;
         tanques = new HashSet<Tanque>();
+        KeyListener listener = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                for (Tanque t : tanques) {
+                    if (t.getEstaAtivo()) {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_LEFT:
+                                t.giraHorario(3);
+                                repaint();
+                                break;
+                            case KeyEvent.VK_RIGHT:
+                                t.giraAntiHorario(3);
+                                repaint();
+                                break;
+                            case KeyEvent.VK_UP:
+                                t.move();
+                                repaint();
+                                break;
+                            case KeyEvent.VK_DOWN:
+                                t.move();
+                                repaint();
+                                break;
+                            case KeyEvent.VK_SPACE:
+                                t.aumentaVelocidade();
+                                break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                for (Tanque t : tanques) {
+                    if (e.getKeyCode() == KeyEvent.VK_SPACE && t.getEstaAtivo()) {
+                        //  t.setVelocidade(0);
+                    }
+                }
+            }
+        };
         addMouseListener(this);
+        addKeyListener(listener);
+        setFocusable(true);
         timer = new Timer(500, this);
         timer.start();
     }
@@ -64,21 +106,8 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
             boolean clicado = t.getRectEnvolvente().contains(e.getX(), e.getY());
             if (clicado) {
                 t.setEstaAtivo(true);
-                switch (e.getButton()) {
-                    case MouseEvent.BUTTON1:
-                        t.giraAntiHorario(3);
-                        break;
-                    case MouseEvent.BUTTON2:
-                        t.aumentaVelocidade();
-                        break;
-                    case MouseEvent.BUTTON3:
-                        t.giraHorario(3);
-                        break;
-                }
-                break;
             }
         }
-        repaint();
     }
 
     @Override
@@ -101,9 +130,22 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         for (Tanque t : tanques) {
+            if (t.getX() < 0 || t.getY() < 0)
+                t.setVelocidade(1);
+            if (t.getX() > getWidth() - 50 || t.getY() > getHeight() - 50)
+                t.setVelocidade(-1);
             t.move();
             repaint();
         }
 
+    }
+
+    public boolean colisao(){
+        for (Tanque t : tanques) {
+            if(t.getBounds().intersects(getBounds())){
+                return true;
+            }
+        }
+        return true;
     }
 }
