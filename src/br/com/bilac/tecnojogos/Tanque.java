@@ -1,5 +1,7 @@
 package br.com.bilac.tecnojogos;
 
+import javafx.scene.shape.Circle;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -13,6 +15,10 @@ public class Tanque {
     private double velocidade;
     private Color cor;
     private boolean estaAtivo;
+
+    public boolean isEstaAtivo() {
+        return estaAtivo;
+    }
 
     public Tanque(double x, double y, double angulo, Color cor) {
         this.x = x;
@@ -57,9 +63,7 @@ public class Tanque {
         at.translate(x, y);
         at.rotate(Math.toRadians(angulo));
 
-
         g2d.transform(at);
-
 
         g2d.setColor(cor);
         g2d.fillRect(-10, -12, 20, 24);
@@ -82,10 +86,16 @@ public class Tanque {
 
         // Se o tanque estiver ativo, desenhamos uma margem nele.
         if (estaAtivo) {
-            g2d.setColor(new Color(120, 120, 120));
+            g2d.setColor(new Color(0, 0, 255));
             Stroke linha = g2d.getStroke();
             g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{8}, 0));
-            g2d.drawRect(-24, -32, 48, 55);
+            g2d.drawOval(-24, -32, 48, 55);
+            g2d.setStroke(linha);
+        } else {
+            g2d.setColor(new Color(255, 0, 0));
+            Stroke linha = g2d.getStroke();
+            g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{8}, 0));
+            g2d.drawOval(-24, -32, 48, 55);
             g2d.setStroke(linha);
         }
         g2d.setTransform(antes);
