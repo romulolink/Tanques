@@ -6,7 +6,8 @@ import java.awt.*;
 public class Main {
 
     public static void main(String[] args) {
-        Arena arena = new Arena(600, 400);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Arena arena = new Arena((int) screenSize.getWidth(), (int) screenSize.getHeight());
         arena.adicionaTanque(new Tanque(100, 200, 0, Color.BLUE));
         arena.adicionaTanque(new Tanque(200, 200, 45, Color.RED));
         arena.adicionaTanque(new Tanque(470, 360, 90, Color.GREEN));

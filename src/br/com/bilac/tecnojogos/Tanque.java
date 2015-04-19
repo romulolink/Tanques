@@ -1,7 +1,5 @@
 package br.com.bilac.tecnojogos;
 
-import javafx.scene.shape.Circle;
-
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -10,25 +8,44 @@ import java.awt.geom.AffineTransform;
  */
 public class Tanque {
 
-    private double x, y;
+    private int x, y;
     private double angulo;
     private double velocidade;
     private Color cor;
     private boolean estaAtivo;
 
-    public boolean isEstaAtivo() {
-        return estaAtivo;
-    }
-
-    public Tanque(double x, double y, double angulo, Color cor) {
+    public Tanque(int x, int y, double angulo, Color cor) {
         this.x = x;
         this.y = y;
         this.angulo = 90 - angulo;
         this.cor = cor;
-        this.velocidade = 1;
+        this.velocidade = 2;
         this.estaAtivo = false;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public double getVelocidade() {
+        return velocidade;
+    }
+
+    public void setVelocidade(double velocidade) {
+        this.velocidade = velocidade;
+    }
 
     public void aumentaVelocidade() {
         velocidade++;
@@ -44,8 +61,8 @@ public class Tanque {
 
 
     public void move() {
-        x = x + Math.sin(Math.toRadians(angulo)) * velocidade;
-        y = y + Math.cos(Math.toRadians(angulo)) * velocidade;
+        x = (int) (x + (Math.sin(Math.toRadians(angulo))) * velocidade);
+        y = (int) (y + (Math.cos(Math.toRadians(angulo))) * velocidade);
     }
 
 
@@ -53,6 +70,9 @@ public class Tanque {
         this.estaAtivo = estaAtivo;
     }
 
+    public boolean getEstaAtivo() {
+        return estaAtivo;
+    }
 
     public void draw(Graphics2D g2d) {
 
@@ -75,7 +95,6 @@ public class Tanque {
             g2d.setColor(Color.BLACK);
             g2d.drawRect(-15, e, 5, 4);
             g2d.drawRect(10, e, 5, 4);
-
         }
 
         // Canhão
@@ -89,17 +108,17 @@ public class Tanque {
             g2d.setColor(new Color(0, 0, 255));
             Stroke linha = g2d.getStroke();
             g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{8}, 0));
-            g2d.drawOval(-24, -32, 48, 55);
+            g2d.drawOval(-24, -32, 50, 50);
             g2d.setStroke(linha);
         } else {
             g2d.setColor(new Color(255, 0, 0));
             Stroke linha = g2d.getStroke();
             g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{8}, 0));
-            g2d.drawOval(-24, -32, 48, 55);
+            g2d.drawOval(-24, -32, 50, 50);
             g2d.setStroke(linha);
         }
-        g2d.setTransform(antes);
 
+        g2d.setTransform(antes);
     }
 
     public Shape getRectEnvolvente() {
@@ -108,5 +127,9 @@ public class Tanque {
         at.rotate(Math.toRadians(angulo));
         Rectangle rect = new Rectangle(-24, -32, 48, 55);
         return at.createTransformedShape(rect);
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle(getX(), getY(), 20, 24);
     }
 }
