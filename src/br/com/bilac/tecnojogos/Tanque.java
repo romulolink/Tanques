@@ -19,15 +19,15 @@ public class Tanque {
         this.y = y;
         this.angulo = 90 - angulo;
         this.cor = cor;
-        this.velocidade = 2;
+        this.velocidade = 15;
         this.estaAtivo = false;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
@@ -52,17 +52,34 @@ public class Tanque {
     }
 
     public void giraHorario(int a) {
-        angulo += a;
-    }
-
-    public void giraAntiHorario(int a) {
         angulo -= a;
     }
 
+    public void giraAntiHorario(int a) {
+        angulo += a;
+    }
 
-    public void move() {
-        x = (int) (x + (Math.sin(Math.toRadians(angulo))) * velocidade);
+
+
+    public void moverFrente() {
+
+
+            x = (int) (x + (Math.sin(Math.toRadians(angulo))) * velocidade);
+            y = (int) (y - (Math.cos(Math.toRadians(angulo))) * velocidade);
+
+
+
+    }
+
+
+    public void moverTras() {
+
+        x = (int) (x - (Math.sin(Math.toRadians(angulo))) * velocidade);
         y = (int) (y + (Math.cos(Math.toRadians(angulo))) * velocidade);
+
+
+
+
     }
 
 
@@ -97,7 +114,7 @@ public class Tanque {
             g2d.drawRect(10, e, 5, 4);
         }
 
-        // Canhão
+        // Canhao
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.fillRect(-3, -25, 6, 25);
         g2d.setColor(cor);
@@ -130,6 +147,6 @@ public class Tanque {
     }
 
     public Rectangle getBounds() {
-        return new Rectangle(getX(), getY(), 20, 24);
+        return new Rectangle((int) getX(), (int)getY(), 20, 24);
     }
 }

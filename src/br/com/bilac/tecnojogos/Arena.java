@@ -35,11 +35,11 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                                 repaint();
                                 break;
                             case KeyEvent.VK_UP:
-                                t.move();
+                                t.moverFrente();
                                 repaint();
                                 break;
                             case KeyEvent.VK_DOWN:
-                                t.move();
+                                t.moverTras();
                                 repaint();
                                 break;
                             case KeyEvent.VK_SPACE:
@@ -134,7 +134,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                 t.setVelocidade(1);
             if (t.getX() > getWidth() - 50 || t.getY() > getHeight() - 50)
                 t.setVelocidade(-1);
-            t.move();
+          //  t.move();
             repaint();
         }
 
