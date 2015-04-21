@@ -10,6 +10,8 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
     private int w, h;
     private HashSet<Tanque> tanques;
     private Timer timer;
+    private Tanque t_player;
+    private boolean gameover = false;
 
     public Arena(int w, int h) {
         this.w = w;
@@ -36,7 +38,10 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                                 break;
                             case KeyEvent.VK_UP:
                                 t.moverFrente();
-                                repaint();
+                                    if (checarColisao())
+                                        mostrarMensagem();
+                                    else
+                                        repaint();
                                 break;
                             case KeyEvent.VK_DOWN:
                                 t.moverTras();
@@ -65,6 +70,18 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
         timer = new Timer(500, this);
         timer.start();
     }
+
+    public void gameEnd(){
+        gameover = true;
+    }
+
+
+    public void mostrarMensagem(){
+
+        JOptionPane.showMessageDialog(this, "Colisão detectada!","Tanques",JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
 
     public void adicionaTanque(Tanque t) {
         tanques.add(t);
@@ -140,12 +157,47 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
 
     }
 
-    public boolean colisao(){
+
+    public boolean checarColisao(){
+
+       double distance;
+        // Identifica o tanque do jogador
+        for (Tanque t : tanques){
+            if (t.getEstaAtivo()){
+                t_player = t;
+            }
+        }
+        // Verifica colisão com qualquer dos tanques na arena
+        for (Tanque t: tanques){
+
+            // Seleciona apenas inimigos
+            if (t.getEstaAtivo() == false){
+
+
+               distance = Math.pow(t_player.getY() - t.getY() , 2)
+                        + Math.pow(t_player.getX() - t.getX(), 2);
+
+                distance = Math.sqrt(distance);
+
+                // verifica distancia entre os raios
+                if (distance <= t_player.getRaio() + t.getRaio()) {
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
+    }
+
+
+    /*public boolean colisao(){
         for (Tanque t : tanques) {
             if(t.getBounds().intersects(getBounds())){
                 return true;
             }
         }
-        return true;
-    }
+        return false;
+    }*/
 }

@@ -13,13 +13,14 @@ public class Tanque {
     private double velocidade;
     private Color cor;
     private boolean estaAtivo;
+    private int raio = 25;
 
     public Tanque(int x, int y, double angulo, Color cor) {
         this.x = x;
         this.y = y;
         this.angulo = 90 - angulo;
         this.cor = cor;
-        this.velocidade = 15;
+        this.velocidade = 5;
         this.estaAtivo = false;
     }
 
@@ -125,17 +126,25 @@ public class Tanque {
             g2d.setColor(new Color(0, 0, 255));
             Stroke linha = g2d.getStroke();
             g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{8}, 0));
-            g2d.drawOval(-24, -32, 50, 50);
+            g2d.drawOval(-24, -32, raio * 2, raio * 2);
             g2d.setStroke(linha);
         } else {
             g2d.setColor(new Color(255, 0, 0));
             Stroke linha = g2d.getStroke();
             g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{8}, 0));
-            g2d.drawOval(-24, -32, 50, 50);
+            g2d.drawOval(-24, -32, raio * 2, raio * 2);
             g2d.setStroke(linha);
         }
 
         g2d.setTransform(antes);
+    }
+
+    public int getRaio() {
+        return raio;
+    }
+
+    public void setRaio(int raio) {
+        this.raio = raio;
     }
 
     public Shape getRectEnvolvente() {
