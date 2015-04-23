@@ -29,13 +29,16 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                     if (t.getEstaAtivo()) {
                         switch (e.getKeyCode()) {
                             case KeyEvent.VK_LEFT:
-                                t.giraHorario(3);
-                                repaint();
+
+                                    t.giraHorario(3);
+                                    repaint();
+
                                 break;
                             case KeyEvent.VK_RIGHT:
-                                t.giraAntiHorario(3);
-                                repaint();
-                                break;
+
+                                    t.giraAntiHorario(3);
+                                    repaint();
+                                  break;
                             case KeyEvent.VK_UP:
                                 t.moverFrente();
                                     if (checarColisao())
@@ -69,6 +72,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
         setFocusable(true);
         timer = new Timer(500, this);
         timer.start();
+        Sound.BACKGROUND_MUSIC.loop();
     }
 
     public void gameEnd(){
@@ -123,6 +127,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
             boolean clicado = t.getRectEnvolvente().contains(e.getX(), e.getY());
             if (clicado) {
                 t.setEstaAtivo(true);
+                Sound.BATTLE_BEGINS.play();
             }
         }
     }
@@ -151,7 +156,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                 t.setVelocidade(1);
             if (t.getX() > getWidth() - 50 || t.getY() > getHeight() - 50)
                 t.setVelocidade(-1);
-          //  t.move();
+           // t.moverFrente();
             repaint();
         }
 
@@ -181,6 +186,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
 
                 // verifica distancia entre os raios
                 if (distance <= t_player.getRaio() + t.getRaio()) {
+                    Sound.FIRST_BLOOD.play();
                     return true;
                 }
 

@@ -53,26 +53,25 @@ public class Tanque {
     }
 
     public void giraHorario(int a) {
-        angulo -= a;
+        angulo -= a * velocidade;
     }
 
     public void giraAntiHorario(int a) {
-        angulo += a;
+        angulo += a * velocidade;
     }
 
 
 
     public void moverFrente() {
 
-
-            x = (int) (x + (Math.sin(Math.toRadians(angulo))) * velocidade);
-            y = (int) (y - (Math.cos(Math.toRadians(angulo))) * velocidade);
-
-
+        x = (int) (x + (Math.sin(Math.toRadians(angulo))) * velocidade);
+        y = (int) (y - (Math.cos(Math.toRadians(angulo))) * velocidade);
 
     }
 
-
+    /*
+    Inverso de ir para frente
+     */
     public void moverTras() {
 
         x = (int) (x - (Math.sin(Math.toRadians(angulo))) * velocidade);
@@ -126,13 +125,13 @@ public class Tanque {
             g2d.setColor(new Color(0, 0, 255));
             Stroke linha = g2d.getStroke();
             g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{8}, 0));
-            g2d.drawOval(-24, -32, raio * 2, raio * 2);
+            g2d.drawOval(-25, -25, raio * 2, raio * 2);
             g2d.setStroke(linha);
         } else {
             g2d.setColor(new Color(255, 0, 0));
             Stroke linha = g2d.getStroke();
             g2d.setStroke(new BasicStroke(1f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{8}, 0));
-            g2d.drawOval(-24, -32, raio * 2, raio * 2);
+            g2d.drawOval(-25, -25, raio * 2, raio * 2);
             g2d.setStroke(linha);
         }
 
