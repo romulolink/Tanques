@@ -6,12 +6,13 @@ import java.awt.event.*;
 import java.util.HashSet;
 
 
-public class Arena extends JComponent implements MouseListener, ActionListener {
+public class Arena extends JComponent implements MouseListener, ActionListener, Runnable {
     private int w, h;
     private HashSet<Tanque> tanques;
     private Timer timer;
     private Tanque t_player;
     private boolean gameover = false;
+    private boolean isUpPressed,isDownPressed,isLeftPressed,isRightPressed;
 
     public Arena(int w, int h) {
         this.w = w;
@@ -25,46 +26,39 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                for (Tanque t : tanques) {
-                    if (t.getEstaAtivo()) {
+
                         switch (e.getKeyCode()) {
-                            case KeyEvent.VK_LEFT:
-
-                                    t.giraHorario(3);
-                                    repaint();
-
+                            case KeyEvent.VK_LEFT: isLeftPressed = true;
                                 break;
-                            case KeyEvent.VK_RIGHT:
-
-                                    t.giraAntiHorario(3);
-                                    repaint();
-                                  break;
-                            case KeyEvent.VK_UP:
-                                t.moverFrente();
-                                    if (checarColisao())
-                                        mostrarMensagem();
-                                    else
-                                        repaint();
+                            case KeyEvent.VK_RIGHT: isRightPressed = true;
                                 break;
-                            case KeyEvent.VK_DOWN:
-                                t.moverTras();
-                                repaint();
+                            case KeyEvent.VK_UP: isUpPressed = true;
                                 break;
-                            case KeyEvent.VK_SPACE:
+                            case KeyEvent.VK_DOWN: isDownPressed = true;
+                                break;
+                           /* case KeyEvent.VK_SPACE:
                                 t.aumentaVelocidade();
-                                break;
+                                break;*/
                         }
-                    }
-                }
+
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
+
                 for (Tanque t : tanques) {
                     if (e.getKeyCode() == KeyEvent.VK_SPACE && t.getEstaAtivo()) {
                         //  t.setVelocidade(0);
                     }
                 }
+
+                switch (e.getKeyCode()) {
+                    case  KeyEvent.VK_UP: isUpPressed =  false ;  break ;
+                    case  KeyEvent.VK_DOWN: isDownPressed =  false ;  break ;
+                    case  KeyEvent.VK_LEFT: isLeftPressed =  false ;  break ;
+                    case  KeyEvent.VK_RIGHT: isRightPressed = false ; break ;
+                }
+
             }
         };
         addMouseListener(this);
@@ -72,6 +66,9 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
         setFocusable(true);
         timer = new Timer(500, this);
         timer.start();
+
+        new  Thread(this).start();
+
         Sound.BACKGROUND_MUSIC.loop();
     }
 
@@ -129,6 +126,48 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                 t.setEstaAtivo(true);
                 Sound.BATTLE_BEGINS.play();
             }
+        }
+    }
+
+    public boolean hasKeyPressed(){
+
+        return isUpPressed || isDownPressed || isLeftPressed || isRightPressed;
+
+    }
+
+    public  void  run() {
+
+        while (true){
+            try  {
+
+                if (hasKeyPressed()){
+
+                        for (Tanque t : tanques) {
+                            if (t.getEstaAtivo()) {
+                                if (checarColisao())
+                                    mostrarMensagem();
+                                if (isUpPressed){
+                                   t.moverFrente();
+                                }
+                                if (isLeftPressed) {
+                                    t.giraHorario(3);
+                                }
+                                if(isRightPressed){
+                                    t.giraAntiHorario(3);
+                                }
+                                if (isDownPressed) {
+                                    t.moverTras();
+                                }
+                            }
+                        }
+
+                }
+                Thread.sleep(200);
+            }  catch (Exception exc) {
+                exc.printStackTrace();
+                break ;
+            }
+
         }
     }
 
