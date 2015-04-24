@@ -2,6 +2,8 @@ package br.com.bilac.tecnojogos;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  * Created by romulolink on 09/04/15.
@@ -14,6 +16,13 @@ public class Tanque {
     private Color cor;
     private boolean estaAtivo;
     private int raio = 25;
+    private ArrayList missil;
+    private boolean podeAtirar;
+    private boolean destruido;
+    private Animation animation;
+
+    private BufferedImage[] explosao = {Sprite.getSprite(0, 0), Sprite.getSprite(1, 0), Sprite.getSprite(2, 0), Sprite.getSprite(3, 0), Sprite.getSprite(4, 0)};
+    private Animation explosaoAnimacao = new Animation(explosao, 10);
 
     public Tanque(int x, int y, double angulo, Color cor) {
         this.x = x;
@@ -22,6 +31,9 @@ public class Tanque {
         this.cor = cor;
         this.velocidade = 5;
         this.estaAtivo = false;
+        this.podeAtirar = false;
+        this.destruido = false;
+        missil = new ArrayList();
     }
 
     public double getX() {
@@ -60,8 +72,6 @@ public class Tanque {
         angulo += a * velocidade;
     }
 
-
-
     public void moverFrente() {
 
         x = (int) (x + (Math.sin(Math.toRadians(angulo))) * velocidade);
@@ -76,9 +86,6 @@ public class Tanque {
 
         x = (int) (x - (Math.sin(Math.toRadians(angulo))) * velocidade);
         y = (int) (y + (Math.cos(Math.toRadians(angulo))) * velocidade);
-
-
-
 
     }
 
@@ -135,6 +142,9 @@ public class Tanque {
             g2d.setStroke(linha);
         }
 
+        if (destruido) {
+            g2d.drawImage(animation.getSprite(), x, y, null);
+        }
         g2d.setTransform(antes);
     }
 
@@ -154,7 +164,27 @@ public class Tanque {
         return at.createTransformedShape(rect);
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle((int) getX(), (int)getY(), 20, 24);
+    public ArrayList getMissil() {
+        return missil;
+    }
+
+    public void atirar() {
+        missil.add(new Missil(x + raio, y + raio / 2));
+    }
+
+    public void setPodeAtirar(boolean podeAtirar) {
+        this.podeAtirar = podeAtirar;
+    }
+
+    public boolean getPodeAtirar() {
+        return podeAtirar;
+    }
+
+    public double getAngulo() {
+        return angulo;
+    }
+
+    public void setDestruido(boolean destruido) {
+        this.destruido = destruido;
     }
 }

@@ -5,7 +5,7 @@ import java.awt.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public Main() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Arena arena = new Arena((int) screenSize.getWidth(), (int) screenSize.getHeight());
         arena.adicionaTanque(new Tanque(100, 200, 90, Color.BLUE));
@@ -17,5 +17,9 @@ public class Main {
         f.pack();
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public static void main(String[] args) {
+        new Main();
     }
 }
