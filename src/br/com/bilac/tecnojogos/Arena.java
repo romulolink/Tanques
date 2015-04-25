@@ -1,7 +1,5 @@
 package br.com.bilac.tecnojogos;
 
-import javafx.animation.Animation;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class Arena extends JComponent implements MouseListener, ActionListener, Runnable {
+public class Arena extends JComponent implements MouseListener, ActionListener {
     private int w, h;
     private HashSet<Tanque> tanques;
     private Timer timer;
@@ -18,14 +16,13 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     private boolean ingame;
     private boolean gameover = false;
     private Animation animation;
+    private Missil missil;
     private boolean isUpPressed,isDownPressed,isLeftPressed,isRightPressed;
 
     public Arena(int w, int h) {
         this.w = w;
         this.h = h;
         tanques = new HashSet<Tanque>();
-
-
         KeyListener listener = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -34,7 +31,13 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
             @Override
             public void keyPressed(KeyEvent e) {
+                for (Tanque t : tanques) {
+                    if (t.getEstaAtivo()) {
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_LEFT:
 
+                                t.giraHorario(3);
+                                repaint();
 
                                 switch (e.getKeyCode()) {
                                     case KeyEvent.VK_LEFT:
@@ -219,6 +222,8 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
         for (Tanque t : tanques) {
             t.moverFrente();
+            t.atirar();
+            Sound.BULLET_SHOT.play();
             repaint();
 
             if (t.getRaio() < w || t.getRaio() < h) {
@@ -257,8 +262,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
         for (Tanque t : tanques) {
 
             // Seleciona apenas inimigos
-            if (t.getEstaAtivo() == false) {
-
+            if (!t.getEstaAtivo()) {
 
                 distance = Math.pow(t_player.getY() - t.getY(), 2)
                         + Math.pow(t_player.getX() - t.getX(), 2);
@@ -268,9 +272,11 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                 // verifica distancia entre os raios
                 if (distance <= t_player.getRaio() + t.getRaio()) {
                     Sound.FIRST_BLOOD.play();
-                   // animation.start();
                     return true;
                 }
+
+                if (t.getBounds().intersects(t.getBounds()) || missil.getBounds().intersects(t_player.getBounds()))
+                    return true;
 
             }
 
