@@ -1,5 +1,6 @@
 package br.com.bilac.tecnojogos;
 
+import javafx.animation.Animation;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -72,10 +73,22 @@ public class Tanque {
         angulo += a * velocidade;
     }
 
+
+    public double getDirecaoX(){
+
+       return Math.sin(Math.toRadians(angulo));
+
+    }
+
+    public double getDirecaoY(){
+
+        return Math.cos(Math.toRadians(angulo));
+    }
+
     public void moverFrente() {
 
-        x = (int) (x + (Math.sin(Math.toRadians(angulo))) * velocidade);
-        y = (int) (y - (Math.cos(Math.toRadians(angulo))) * velocidade);
+        x = (int) (x + getDirecaoX() * velocidade);
+        y = (int) (y - getDirecaoY() * velocidade);
 
     }
 
@@ -84,8 +97,8 @@ public class Tanque {
      */
     public void moverTras() {
 
-        x = (int) (x - (Math.sin(Math.toRadians(angulo))) * velocidade);
-        y = (int) (y + (Math.cos(Math.toRadians(angulo))) * velocidade);
+        x = (int) (x - getDirecaoX() * velocidade);
+        y = (int) (y + getDirecaoY() * velocidade);
 
     }
 

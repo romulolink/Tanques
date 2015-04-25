@@ -1,5 +1,7 @@
 package br.com.bilac.tecnojogos;
 
+import javafx.animation.Animation;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,6 +24,8 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
         this.w = w;
         this.h = h;
         tanques = new HashSet<Tanque>();
+
+
         KeyListener listener = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -30,25 +34,25 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
             @Override
             public void keyPressed(KeyEvent e) {
-                for (Tanque t : tanques) {
-                    if (t.getEstaAtivo()) {
-                        switch (e.getKeyCode()) {
-                            case KeyEvent.VK_LEFT:
 
-                        switch (e.getKeyCode()) {
-                            case KeyEvent.VK_LEFT: isLeftPressed = true;
-                                break;
-                            case KeyEvent.VK_RIGHT: isRightPressed = true;
-                                break;
-                            case KeyEvent.VK_UP: isUpPressed = true;
-                                break;
-                            case KeyEvent.VK_DOWN: isDownPressed = true;
-                                break;
-                           /* case KeyEvent.VK_SPACE:
-                                t.aumentaVelocidade();
-                                break;*/
-                        }
 
+                                switch (e.getKeyCode()) {
+                                    case KeyEvent.VK_LEFT:
+                                        isLeftPressed = true;
+                                        break;
+                                    case KeyEvent.VK_RIGHT:
+                                        isRightPressed = true;
+                                        break;
+                                    case KeyEvent.VK_UP:
+                                        isUpPressed = true;
+                                        break;
+                                    case KeyEvent.VK_DOWN:
+                                        isDownPressed = true;
+                                        break;
+                               /* case KeyEvent.VK_SPACE:
+                                    t.aumentaVelocidade();
+                                    break;*/
+                                }
             }
 
             @Override
@@ -69,6 +73,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
             }
         };
+
         addMouseListener(this);
         addKeyListener(listener);
         setFocusable(true);
@@ -211,10 +216,10 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         for (Tanque t : tanques) {
             t.moverFrente();
             repaint();
-        }
 
             if (t.getRaio() < w || t.getRaio() < h) {
                 t.setVelocidade(-1);
@@ -263,7 +268,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                 // verifica distancia entre os raios
                 if (distance <= t_player.getRaio() + t.getRaio()) {
                     Sound.FIRST_BLOOD.play();
-                    animation.start();
+                   // animation.start();
                     return true;
                 }
 
