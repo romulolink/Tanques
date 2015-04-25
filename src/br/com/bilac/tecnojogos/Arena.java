@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 
-public class Arena extends JComponent implements MouseListener, ActionListener {
+public class Arena extends JComponent implements MouseListener, ActionListener, Runnable {
     private int w, h;
     private HashSet<Tanque> tanques;
     private Timer timer;
@@ -31,15 +31,9 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                for (Tanque t : tanques) {
-                    if (t.getEstaAtivo()) {
-                        switch (e.getKeyCode()) {
-                            case KeyEvent.VK_LEFT:
-
-                                t.giraHorario(3);
-                                repaint();
 
                                 switch (e.getKeyCode()) {
+
                                     case KeyEvent.VK_LEFT:
                                         isLeftPressed = true;
                                         break;
@@ -52,9 +46,9 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                                     case KeyEvent.VK_DOWN:
                                         isDownPressed = true;
                                         break;
-                               /* case KeyEvent.VK_SPACE:
-                                    t.aumentaVelocidade();
-                                    break;*/
+                                   /* case KeyEvent.VK_SPACE:
+                                        t.aumentaVelocidade();
+                                        break;*/
                                 }
             }
 
@@ -67,7 +61,10 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                     }
                 }
 
+
                 switch (e.getKeyCode()) {
+
+
                     case  KeyEvent.VK_UP: isUpPressed =  false ;  break ;
                     case  KeyEvent.VK_DOWN: isDownPressed =  false ;  break ;
                     case  KeyEvent.VK_LEFT: isLeftPressed =  false ;  break ;
@@ -80,10 +77,10 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
         addMouseListener(this);
         addKeyListener(listener);
         setFocusable(true);
+        new  Thread(this).start();
+
         timer = new Timer(500, this);
         timer.start();
-
-        new  Thread(this).start();
 
         ingame = true;
         Sound.BACKGROUND_MUSIC.loop();
@@ -169,29 +166,39 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
         while (true){
             try  {
 
+
                 if (hasKeyPressed()){
 
                         for (Tanque t : tanques) {
+
                             if (t.getEstaAtivo()) {
-                                if (checarColisao())
-                                    mostrarMensagem();
+
                                 if (isUpPressed){
+                                    if (checarColisao()){
+                                        mostrarMensagem();
+                                    }
+
                                    t.moverFrente();
+
                                 }
                                 if (isLeftPressed) {
                                     t.giraHorario(3);
                                 }
                                 if(isRightPressed){
                                     t.giraAntiHorario(3);
+
                                 }
                                 if (isDownPressed) {
                                     t.moverTras();
                                 }
+
+                                repaint();
+
                             }
                         }
 
                 }
-                Thread.sleep(200);
+                Thread.sleep(100);
             }  catch (Exception exc) {
                 exc.printStackTrace();
                 break ;
@@ -220,12 +227,14 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        for (Tanque t : tanques) {
+       for (Tanque t : tanques) {
+           if (!t.getEstaAtivo())
             t.moverFrente();
-            t.atirar();
-            Sound.BULLET_SHOT.play();
+          //  t.atirar();
+          //  Sound.BULLET_SHOT.play();
             repaint();
 
+         /*
             if (t.getRaio() < w || t.getRaio() < h) {
                 t.setVelocidade(-1);
                 t.moverFrente();
@@ -233,7 +242,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
             if (t.getRaio() > w - 50 || t.getRaio() > h - 50) {
                 t.setVelocidade(1);
                 t.moverTras();
-            }
+            }*/
 
             if (ingame) {
                 ArrayList ms = t.getMissil();
@@ -275,8 +284,8 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                     return true;
                 }
 
-                if (t.getBounds().intersects(t.getBounds()) || missil.getBounds().intersects(t_player.getBounds()))
-                    return true;
+               /* if (t.getBounds().intersects(t.getBounds()) || missil.getBounds().intersects(t_player.getBounds()))
+                    return true;*/
 
             }
 
