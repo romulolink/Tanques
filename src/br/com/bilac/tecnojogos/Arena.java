@@ -17,7 +17,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     private boolean gameover = false;
     private Animation animation;
     private Missil missil;
-    private boolean isUpPressed,isDownPressed,isLeftPressed,isRightPressed;
+    private boolean isUpPressed,isDownPressed,isLeftPressed,isRightPressed,isSpacePressed,atirar;
 
     public Arena(int w, int h) {
         this.w = w;
@@ -46,9 +46,12 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                                     case KeyEvent.VK_DOWN:
                                         isDownPressed = true;
                                         break;
-                                   /* case KeyEvent.VK_SPACE:
-                                        t.aumentaVelocidade();
-                                        break;*/
+                                    case KeyEvent.VK_SPACE:
+                                        isSpacePressed = true;
+                                        break;
+                                    case KeyEvent.VK_W:
+                                        atirar = true;
+                                        break;
                                 }
             }
 
@@ -69,7 +72,11 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                     case  KeyEvent.VK_DOWN: isDownPressed =  false ;  break ;
                     case  KeyEvent.VK_LEFT: isLeftPressed =  false ;  break ;
                     case  KeyEvent.VK_RIGHT: isRightPressed = false ; break ;
+                    case  KeyEvent.VK_SPACE: isSpacePressed = false ; break ;
+                    case  KeyEvent.VK_W: atirar = false ; break ;
+
                 }
+
 
             }
         };
@@ -85,6 +92,62 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
         ingame = true;
         Sound.BACKGROUND_MUSIC.loop();
     }
+
+
+    public  void  run() {
+
+        while (true){
+            try  {
+
+
+                if (hasKeyPressed()){
+
+                    for (Tanque t : tanques) {
+
+                        if (t.getEstaAtivo()) {
+
+                            if (isUpPressed){
+                                if (checarColisao()){
+                                    mostrarMensagem();
+                                }
+
+                                t.moverFrente();
+
+                            }
+                            if (isLeftPressed) {
+                                t.giraHorario(3);
+                            }
+                            if(isRightPressed){
+                                t.giraAntiHorario(3);
+
+                            }
+                            if (isDownPressed) {
+                                t.moverTras();
+                            }
+
+                            if (isSpacePressed){
+                                t.aumentaVelocidade();
+                            }
+
+                            if (atirar){
+                                t.atirar();
+                            }
+
+                            repaint();
+
+                        }
+                    }
+
+                }
+                Thread.sleep(100);
+            }  catch (Exception exc) {
+                exc.printStackTrace();
+                break ;
+            }
+
+        }
+    }
+
 
     public void gameEnd(){
         gameover = true;
@@ -157,55 +220,10 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
     public boolean hasKeyPressed(){
 
-        return isUpPressed || isDownPressed || isLeftPressed || isRightPressed;
+        return isUpPressed || isDownPressed || isLeftPressed || isRightPressed || atirar;
 
     }
 
-    public  void  run() {
-
-        while (true){
-            try  {
-
-
-                if (hasKeyPressed()){
-
-                        for (Tanque t : tanques) {
-
-                            if (t.getEstaAtivo()) {
-
-                                if (isUpPressed){
-                                    if (checarColisao()){
-                                        mostrarMensagem();
-                                    }
-
-                                   t.moverFrente();
-
-                                }
-                                if (isLeftPressed) {
-                                    t.giraHorario(3);
-                                }
-                                if(isRightPressed){
-                                    t.giraAntiHorario(3);
-
-                                }
-                                if (isDownPressed) {
-                                    t.moverTras();
-                                }
-
-                                repaint();
-
-                            }
-                        }
-
-                }
-                Thread.sleep(100);
-            }  catch (Exception exc) {
-                exc.printStackTrace();
-                break ;
-            }
-
-        }
-    }
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -250,7 +268,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                 for (int i = 0; i < ms.size(); i++) {
                     Missil m = (Missil) ms.get(i);
                     if (m.isVisible())
-                        m.move();
+                        m.move(t.getDirecaoX(), t.getDirecaoY());
                     else ms.remove(i);
                 }
             }
@@ -281,6 +299,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                 // verifica distancia entre os raios
                 if (distance <= t_player.getRaio() + t.getRaio()) {
                     Sound.FIRST_BLOOD.play();
+                    t.setDestruido(true);
                     return true;
                 }
 

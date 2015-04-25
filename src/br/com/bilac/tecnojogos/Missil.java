@@ -20,6 +20,7 @@ public class Missil {
     public Missil(int x, int y) {
         ImageIcon ii =
                 new ImageIcon(this.getClass().getResource("missil.png"));
+
         image = ii.getImage();
         visible = true;
         width = image.getWidth(null);
@@ -53,9 +54,9 @@ public class Missil {
         return new Rectangle(x, y, width, height);
     }
 
-    public void move() {
-        x += MISSILE_SPEED;
-        y += MISSILE_SPEED;
+    public void move(double direcaoX, double direcaoY) {
+        x += direcaoX * MISSILE_SPEED;
+        y -= direcaoY * MISSILE_SPEED;
         if (x > BOARD_WIDTH)
             visible = false;
         if (y > BOARD_HEIGHT)

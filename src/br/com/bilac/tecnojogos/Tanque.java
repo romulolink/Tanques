@@ -35,12 +35,12 @@ public class Tanque {
         this.podeAtirar = false;
         this.destruido = false;
         missil = new ArrayList();
-        /*try {
-            explosao = ImageIO.read(new File("explosion2-sprite.png"));
+        try {
+            explosao = ImageIO.read(Tanque.class.getResourceAsStream("explosion2-sprite.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        explosaoAnimacao = new Animation(explosao, 31, 30, 45, 14, false, raio / 2, raio / 2, 0);*/
+        explosaoAnimacao = new Animation(explosao, 31, 30, 45, 14, false, raio / 2, raio / 2, 0);
     }
 
     public double getX() {
@@ -189,7 +189,8 @@ public class Tanque {
     }
 
     public void atirar() {
-        missil.add(new Missil(x + raio, y + raio / 2));
+
+        missil.add(new Missil(x, y));
     }
 
     public void setPodeAtirar(boolean podeAtirar) {
