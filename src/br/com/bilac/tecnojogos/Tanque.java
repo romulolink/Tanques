@@ -37,7 +37,7 @@ public class Tanque {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        explosaoAnimacao = new Animation(explosao, 31, 30, 45, 15, false, raio, raio, 0);
+        explosaoAnimacao = new Animation(explosao, 31, 30, 45, 14, false, raio / 2, raio / 2, 0);
     }
 
     public double getX() {
@@ -148,6 +148,7 @@ public class Tanque {
 
         if (destruido) {
             explosaoAnimacao.Draw(g2d);
+            Sound.EXPLOSION.play();
         }
         g2d.setTransform(antes);
     }
@@ -190,5 +191,9 @@ public class Tanque {
 
     public void setDestruido(boolean destruido) {
         this.destruido = destruido;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle((int) getX(), (int) getY(), getRaio(), getRaio());
     }
 }

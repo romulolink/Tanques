@@ -15,7 +15,7 @@ public class Missil {
 
     private final int BOARD_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     private final int BOARD_HEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-    private final int MISSILE_SPEED = 50;
+    private final int MISSILE_SPEED = 100;
 
     public Missil(int x, int y) {
         ImageIcon ii =

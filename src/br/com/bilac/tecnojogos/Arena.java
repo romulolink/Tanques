@@ -16,6 +16,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
     private boolean ingame;
     private boolean gameover = false;
     private Animation animation;
+    private Missil missil;
 
     public Arena(int w, int h) {
         this.w = w;
@@ -60,6 +61,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                             case KeyEvent.VK_SPACE:
                                 if (t.getEstaAtivo()) {
                                     t.atirar();
+                                    Sound.BULLET_SHOT.play();
                                 }
                                 break;
                         }
@@ -171,6 +173,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
         for (Tanque t : tanques) {
             t.moverFrente();
             t.atirar();
+            Sound.BULLET_SHOT.play();
             repaint();
 
             if (t.getRaio() < w || t.getRaio() < h) {
@@ -221,6 +224,9 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                     Sound.FIRST_BLOOD.play();
                     return true;
                 }
+
+                if (t.getBounds().intersects(t.getBounds()) || missil.getBounds().intersects(t_player.getBounds()))
+                    return true;
 
             }
 
