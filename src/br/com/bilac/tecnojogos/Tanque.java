@@ -1,13 +1,13 @@
 package br.com.bilac.tecnojogos;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created by romulolink on 09/04/15.
- */
 public class Tanque {
 
     private int x, y;
@@ -19,10 +19,8 @@ public class Tanque {
     private ArrayList missil;
     private boolean podeAtirar;
     private boolean destruido;
-    private Animation animation;
-
-    private BufferedImage[] explosao = {Sprite.getSprite(0, 0), Sprite.getSprite(1, 0), Sprite.getSprite(2, 0), Sprite.getSprite(3, 0), Sprite.getSprite(4, 0)};
-    private Animation explosaoAnimacao = new Animation(explosao, 10);
+    private BufferedImage explosao;
+    private Animation explosaoAnimacao;
 
     public Tanque(int x, int y, double angulo, Color cor) {
         this.x = x;
@@ -34,6 +32,12 @@ public class Tanque {
         this.podeAtirar = false;
         this.destruido = false;
         missil = new ArrayList();
+        try {
+            explosao = ImageIO.read(new File("C:\\Users\\User\\IdeaProjects\\Tanques\\src\\br\\com\\bilac\\tecnojogos\\explosion2-sprite.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        explosaoAnimacao = new Animation(explosao, 31, 30, 45, 15, false, raio, raio, 0);
     }
 
     public double getX() {
@@ -143,7 +147,7 @@ public class Tanque {
         }
 
         if (destruido) {
-            g2d.drawImage(animation.getSprite(), x, y, null);
+            explosaoAnimacao.Draw(g2d);
         }
         g2d.setTransform(antes);
     }

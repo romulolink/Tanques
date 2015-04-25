@@ -45,14 +45,17 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                                 break;
                             case KeyEvent.VK_UP:
                                 t.moverFrente();
+                                repaint();
                                 if (checarColisao())
-                                    mostrarMensagem();
-                                else
-                                    repaint();
+                                    // mostrarMensagem();
+                                    t.setDestruido(true);
                                 break;
                             case KeyEvent.VK_DOWN:
                                 t.moverTras();
                                 repaint();
+                                if (checarColisao())
+                                    // mostrarMensagem();
+                                    t.setDestruido(true);
                                 break;
                             case KeyEvent.VK_SPACE:
                                 if (t.getEstaAtivo()) {
@@ -66,11 +69,6 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                for (Tanque t : tanques) {
-                    if (e.getKeyCode() == KeyEvent.VK_SPACE && t.getEstaAtivo()) {
-                        //  t.setVelocidade(0);
-                    }
-                }
             }
         };
         addMouseListener(this);
@@ -172,6 +170,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
         for (Tanque t : tanques) {
             t.moverFrente();
+            t.atirar();
             repaint();
 
             if (t.getRaio() < w || t.getRaio() < h) {
@@ -210,8 +209,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
         for (Tanque t : tanques) {
 
             // Seleciona apenas inimigos
-            if (t.getEstaAtivo() == false) {
-
+            if (!t.getEstaAtivo()) {
 
                 distance = Math.pow(t_player.getY() - t.getY(), 2)
                         + Math.pow(t_player.getX() - t.getX(), 2);
@@ -221,7 +219,6 @@ public class Arena extends JComponent implements MouseListener, ActionListener {
                 // verifica distancia entre os raios
                 if (distance <= t_player.getRaio() + t.getRaio()) {
                     Sound.FIRST_BLOOD.play();
-                    animation.start();
                     return true;
                 }
 
