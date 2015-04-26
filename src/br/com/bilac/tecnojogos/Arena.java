@@ -86,19 +86,21 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
         setFocusable(true);
         new  Thread(this).start();
 
-        timer = new Timer(500, this);
-        timer.start();
-
         ingame = true;
         Sound.BACKGROUND_MUSIC.loop();
     }
 
+    public boolean hasKeyPressed(){
 
+        return isUpPressed || isDownPressed || isLeftPressed || isRightPressed || atirar;
+
+    }
+
+    // Game loop
     public  void  run() {
 
         while (true){
             try  {
-
 
                 if (hasKeyPressed()){
 
@@ -130,7 +132,9 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                             }
 
                             if (atirar){
+                                // adiciona bala
                                 t.atirar();
+
                             }
 
                             repaint();
@@ -139,13 +143,28 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                     }
 
                 }
+
+
                 Thread.sleep(100);
             }  catch (Exception exc) {
                 exc.printStackTrace();
                 break ;
             }
 
-        }
+
+            for (Tanque t : tanques) {
+
+                if (t.getEstaAtivo()) {
+                    // deslocamento da bala
+                    tanqueAtirar(t);
+
+                    repaint();
+                }
+
+            }
+
+        } // end While
+
     }
 
 
@@ -199,9 +218,10 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
                 for (int i = 0; i < ms.size(); i++) {
                     Missil m = (Missil) ms.get(i);
-                    g2d.drawImage(m.getImage(), m.getX(), m.getY(), this);
+                    g2d.drawImage(m.getImage(), (int)m.getX(), (int)m.getY(), this);
                 }
             }
+
         }
 
     }
@@ -213,16 +233,13 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
             boolean clicado = t.getRectEnvolvente().contains(e.getX(), e.getY());
             if (clicado) {
                 t.setEstaAtivo(true);
+                t_player = t;
                 Sound.BATTLE_BEGINS.play();
             }
         }
     }
 
-    public boolean hasKeyPressed(){
 
-        return isUpPressed || isDownPressed || isLeftPressed || isRightPressed || atirar;
-
-    }
 
 
     @Override
@@ -246,11 +263,18 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     public void actionPerformed(ActionEvent e) {
 
        for (Tanque t : tanques) {
-           if (!t.getEstaAtivo())
-            t.moverFrente();
+
+
+           if (!t.getEstaAtivo()){
+               t.moverFrente();
+               repaint();
+
+           }
+
+
           //  t.atirar();
           //  Sound.BULLET_SHOT.play();
-            repaint();
+
 
          /*
             if (t.getRaio() < w || t.getRaio() < h) {
@@ -262,16 +286,27 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                 t.moverTras();
             }*/
 
-            if (ingame) {
-                ArrayList ms = t.getMissil();
 
-                for (int i = 0; i < ms.size(); i++) {
-                    Missil m = (Missil) ms.get(i);
-                    if (m.isVisible())
-                        m.move(t.getDirecaoX(), t.getDirecaoY());
-                    else ms.remove(i);
-                }
+
+       }
+
+    }
+
+    public void tanqueAtirar(Tanque t) {
+        if (ingame) {
+            ArrayList ms = t.getMissil();
+            for (int i = 0; i < ms.size(); i++) {
+                Missil m = (Missil) ms.get(i);
+
+                    m.move();
+                    Sound.BULLET_SHOT.play();
+
+
+                if (((Missil) ms.get(i)).visible == false)
+                    ms.remove(i);
             }
+
+
         }
     }
 

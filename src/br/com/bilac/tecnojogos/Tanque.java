@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class Tanque {
 
+    private final int BOARD_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+    private final int BOARD_HEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
     private int x, y;
     private double angulo;
     private double velocidade;
@@ -190,7 +192,8 @@ public class Tanque {
 
     public void atirar() {
 
-        missil.add(new Missil(x, y));
+        missil.add(new Missil(x, y, getDirecaoX(), getDirecaoY()));
+
     }
 
     public void setPodeAtirar(boolean podeAtirar) {
