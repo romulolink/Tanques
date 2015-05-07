@@ -167,8 +167,6 @@ public class Tanque {
 
 
             explosaoAnimacao.Draw(g2d);
-            Sound.EXPLOSION.play();
-
 
             this.setDestruido(false);
         }
@@ -199,6 +197,7 @@ public class Tanque {
     public void atirar() {
 
         missil.add(new Missil(x, y, getDirecaoX(), getDirecaoY()));
+        Sound.BULLET_SHOT.play();
 
     }
 

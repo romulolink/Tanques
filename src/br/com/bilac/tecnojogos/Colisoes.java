@@ -56,7 +56,11 @@ public class Colisoes implements Runnable {
                     //}
                     // verifica distancia entre os raios do player com os robos
                     if (distance <= m.getRaio() + t.getRaio()) {
-                        //Sound.FIRST_BLOOD.play();
+
+                        Sound.EXPLOSION.play();
+
+                        Sound.FIRST_BLOOD.play();
+
                         t.setDestruido(true);
                         houveColisao = true;
 
