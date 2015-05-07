@@ -38,7 +38,7 @@ public class Colisoes implements Runnable {
 
 
             // Seleciona apenas inimigos
-            if (!t.getEstaAtivo()) {
+            if (true) {
 
                 // Para cada míssil enviado pelo player checa a colisão
                 for (int i = 0; i < ms.size(); i++) {

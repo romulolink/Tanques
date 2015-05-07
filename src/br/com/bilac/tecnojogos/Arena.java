@@ -116,6 +116,8 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
             pool.execute(new Bots(tanques));
 
+            repaint();
+
 
         }catch (Exception e){
 
@@ -185,7 +187,11 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
                     tanqueAtirar(t);
                     repaint();
+                }else{
+                    tanqueAtirar(t);
+                    repaint();
                 }
+
 
             }
 

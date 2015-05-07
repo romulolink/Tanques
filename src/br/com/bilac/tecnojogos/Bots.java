@@ -44,20 +44,15 @@ public class Bots implements Runnable {
         for (Tanque t : tanques) {
 
             if (!t.getEstaAtivo()){
-
+                t.moverFrente();
                 // Para cada 10 passos espera 100ms para mudar de direção
-                for (int i =0;i<10;i++){
 
-                    try {
-                        Thread.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    t.moverFrente();
-                }
+                t.setPodeAtirar(true);
+                t.atirar();
 
 
-               switch (randInt(1,4)){
+
+               switch (randInt(1,30)){
                    case 1:
                        t.giraHorario(90);
                        break;
