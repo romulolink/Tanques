@@ -38,7 +38,7 @@ public class Tanque {
         this.destruido = false;
         missil = new ArrayList();
         try {
-            explosao = ImageIO.read(Tanque.class.getResourceAsStream("explosion2-sprite.png"));
+            explosao = ImageIO.read(Tanque.class.getResourceAsStream("Imagens/explosion2-sprite.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }

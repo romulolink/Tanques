@@ -108,8 +108,11 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
         while (true){
 
         // Thread para checar colisões
+
         try{
             pool.execute(new Colisoes(tanques, t_player));
+
+           // Thread.sleep(100);
 
             pool.execute(new Bots(tanques));
 

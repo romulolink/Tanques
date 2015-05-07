@@ -34,31 +34,50 @@ public class Bots implements Runnable {
     public void run() {
 
 
+        for (Tanque t : tanques) {
+            if (t.getEstaAtivo() == false){
+                t.moverFrente();
+            }
+        }
+
         // Para cada tanque escolher uma direção e seguir
         for (Tanque t : tanques) {
 
             if (!t.getEstaAtivo()){
 
-               for (int i=0; i < 5; i++)
-                    t.moverFrente();
+                // Para cada 10 passos espera 100ms para mudar de direção
+                for (int i =0;i<10;i++){
 
-               switch (randInt(1,3)){
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    t.moverFrente();
+                }
+
+
+               switch (randInt(1,4)){
                    case 1:
                        t.giraHorario(90);
                        break;
                    case 2:
                        t.giraAntiHorario(90);
                        break;
-                   default:
-                       t.moverFrente();
-
+                   case 3:
+                       t.giraHorario(45);
+                       break;
+                   case 4:
+                       t.giraAntiHorario(45);
+                       break;
                }
 
-                try {
-                    Thread.sleep(100);
+                // para cada virada espera um tempo
+                /*try {
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
 
 
             }

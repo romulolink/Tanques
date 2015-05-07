@@ -21,7 +21,7 @@ public class Missil {
 
     public Missil(double x, double y, double direcaoX, double direcaoY) {
         ImageIcon ii =
-                new ImageIcon(this.getClass().getResource("missil.png"));
+                new ImageIcon(this.getClass().getResource("Imagens/missil.png"));
 
         image = ii.getImage();
         visible = true;
