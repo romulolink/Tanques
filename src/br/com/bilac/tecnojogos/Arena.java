@@ -6,6 +6,8 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class Arena extends JComponent implements MouseListener, ActionListener, Runnable {
@@ -17,7 +19,11 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     private boolean gameover = false;
     private Animation animation;
     private Missil missil;
+    private int i;
     private boolean isUpPressed,isDownPressed,isLeftPressed,isRightPressed,isSpacePressed,atirar;
+    private final ExecutorService pool = Executors.newFixedThreadPool(3);
+    private Colisoes col;
+
 
     public Arena(int w, int h) {
         this.w = w;
@@ -87,7 +93,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
         new  Thread(this).start();
 
         ingame = true;
-        Sound.BACKGROUND_MUSIC.loop();
+        //Sound.BACKGROUND_MUSIC.loop();
     }
 
     public boolean hasKeyPressed(){
@@ -100,6 +106,16 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     public  void  run() {
 
         while (true){
+
+        // Thread para checar colisões
+        try{
+            pool.execute(col = new Colisoes(tanques, t_player));
+        }catch (Exception e){
+
+            e.printStackTrace();
+            pool.shutdown();
+        }
+
             try  {
 
                 if (hasKeyPressed()){
@@ -109,9 +125,6 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                         if (t.getEstaAtivo()) {
 
                             if (isUpPressed){
-                                if (checarColisao()){
-                                    mostrarMensagem();
-                                }
 
                                 t.moverFrente();
 
@@ -133,6 +146,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
 
                             if (atirar){
                                 // adiciona bala
+                                t.setPodeAtirar(true);
                                 t.atirar();
 
                             }
@@ -151,13 +165,17 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                 break ;
             }
 
+            // Executa o tiro de forma contínua e checa colisões
+            // Para aparecer o tiro é setado o visible para true
 
             for (Tanque t : tanques) {
 
+              //  System.out.printf("\njogo rodando " + i++);
+                // Apenas o tanque ativo está atirando o tempo inteiro no modo invisivel
                 if (t.getEstaAtivo()) {
                     // deslocamento da bala
-                    tanqueAtirar(t);
 
+                    tanqueAtirar(t);
                     repaint();
                 }
 
@@ -180,7 +198,13 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     }
 
 
-    public void adicionaTanque(Tanque t) {
+    public void adicionaTanqueBot(Tanque t) {
+        tanques.add(t);
+    }
+
+    public void adicionaTanquePlayer(Tanque t){
+        t.setEstaAtivo(true);
+        t_player = t;
         tanques.add(t);
     }
 
@@ -234,7 +258,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
             if (clicado) {
                 t.setEstaAtivo(true);
                 t_player = t;
-                Sound.BATTLE_BEGINS.play();
+                //Sound.BATTLE_BEGINS.play();
             }
         }
     }
@@ -295,13 +319,12 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     public void tanqueAtirar(Tanque t) {
         if (ingame) {
             ArrayList ms = t.getMissil();
+            // Executa quantos mísseis tiver
             for (int i = 0; i < ms.size(); i++) {
                 Missil m = (Missil) ms.get(i);
 
                     m.move();
-                    Sound.BULLET_SHOT.play();
-
-
+                   // Sound.BULLET_SHOT.play();
                 if (((Missil) ms.get(i)).visible == false)
                     ms.remove(i);
             }
@@ -311,29 +334,32 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
     }
 
 
+    // Checar colisão entre Missil e Tanques
     public boolean checarColisao() {
 
         double distance;
         // Identifica o tanque do jogador
-        for (Tanque t : tanques) {
+        /*for (Tanque t : tanques) {
             if (t.getEstaAtivo()) {
                 t_player = t;
             }
-        }
-        // Verifica colis�o com qualquer dos tanques na arena
+        }*/
+        // Verifica colisão com qualquer dos tanques na arena
         for (Tanque t : tanques) {
 
             // Seleciona apenas inimigos
             if (!t.getEstaAtivo()) {
 
-                distance = Math.pow(t_player.getY() - t.getY(), 2)
-                        + Math.pow(t_player.getX() - t.getX(), 2);
-
+                // Calcula Hipotenusa
+                distance = Math.pow(t_player.getY() - t.getY(), 2) + Math.pow(t_player.getX() - t.getX(), 2);
                 distance = Math.sqrt(distance);
 
-                // verifica distancia entre os raios
+                // Para cada missil de player
+                //for (int j=0;j<t_player.getMissil().size();j--){
+                //}
+                // verifica distancia entre os raios do player com os robos
                 if (distance <= t_player.getRaio() + t.getRaio()) {
-                    Sound.FIRST_BLOOD.play();
+                    //Sound.FIRST_BLOOD.play();
                     t.setDestruido(true);
                     return true;
                 }
@@ -342,7 +368,6 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
                     return true;*/
 
             }
-
         }
 
         return false;

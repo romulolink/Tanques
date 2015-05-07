@@ -13,6 +13,7 @@ public class Missil {
     boolean visible;
     private int width, height;
     private double direcaoX, direcaoY;
+    private int raio = 5;
 
     private final int BOARD_WIDTH = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     private final int BOARD_HEIGHT = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -72,6 +73,9 @@ public class Missil {
         return new Rectangle((int)x, (int)y, width, height);
     }
 
+    public int getRaio(){
+        return this.raio;
+    }
     public void move() {
 
 

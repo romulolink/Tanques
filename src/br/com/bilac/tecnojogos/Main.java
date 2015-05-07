@@ -8,10 +8,12 @@ public class Main {
     public Main() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Arena arena = new Arena((int) screenSize.getWidth(), (int) screenSize.getHeight());
-        arena.adicionaTanque(new Tanque(100, 200, 90, Color.BLUE));
-        arena.adicionaTanque(new Tanque(200, 200, 180, Color.RED));
-        arena.adicionaTanque(new Tanque(470, 360, 0, Color.GREEN));
-        arena.adicionaTanque(new Tanque(450, 50, 270, Color.YELLOW));
+
+        arena.adicionaTanquePlayer(new Tanque(100, 200, 90, Color.BLUE));
+        arena.adicionaTanqueBot(new Tanque(200, 200, 180, Color.RED));
+        arena.adicionaTanqueBot(new Tanque(470, 360, 0, Color.GREEN));
+        arena.adicionaTanqueBot(new Tanque(450, 50, 270, Color.YELLOW));
+
         JFrame f = new JFrame("Tanques");
         f.getContentPane().add(arena);
         f.pack();
