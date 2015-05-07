@@ -116,6 +116,7 @@ public class Arena extends JComponent implements MouseListener, ActionListener, 
             pool.shutdown();
         }
 
+
             try  {
 
                 if (hasKeyPressed()){

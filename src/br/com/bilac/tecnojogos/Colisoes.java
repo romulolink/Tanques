@@ -59,6 +59,13 @@ public class Colisoes implements Runnable {
                         //Sound.FIRST_BLOOD.play();
                         t.setDestruido(true);
                         houveColisao = true;
+
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        tanques.remove(t);
                     }
 
 

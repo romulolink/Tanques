@@ -164,9 +164,15 @@ public class Tanque {
         }
 
         if (destruido) {
+
+
             explosaoAnimacao.Draw(g2d);
             Sound.EXPLOSION.play();
+
+
+            this.setDestruido(false);
         }
+
         g2d.setTransform(antes);
     }
 
